@@ -1,0 +1,49 @@
+{
+    "fake_account": {
+        "1": {
+            "country_code": "en-ca",
+            "email": "fake1@example.com",
+            "password": "fakepassword1",
+            "node": "1"
+        },
+        "2": {
+            "country_code": "en-ca",
+            "email": "fake2@example.com",
+            "password": "fakepassword2",
+            "node": "2"
+        },
+        "3": {
+            "country_code": "en-ca",
+            "email": "fake3@example.com",
+            "password": "fakepassword3",
+            "node": "3"
+        }
+    },
+    "real_account": {
+        "country_code": "en-ca",
+        "email": "real@example.com",
+        "password": "realpassword",
+        "node": "200"
+    },
+    "target_time": {
+        "Calgary": "Calgary_target_time",
+        "Ottawa": "Ottawa_target_time",
+        "Toronto": "Toronto_target_time",
+        "Vancouver": "Vancouver_target_time"
+    },
+    "gmail_info": {
+        "gmail_smtp_server": "smtp.gmail.com",
+        "gmail_smtp_port": 587,
+        "gmail_sender_email": "your_sender_email@gmail.com",
+        "gmail_sender_password": "your_sender_password",
+        "gmail_receiver_email": [ "receiver1@gmail.com", "receiver2@gmail.com" ]
+    },
+    "wechat_info": {
+        "__comment__": "Please visit https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login for more information",
+        "touser": [ "receiver1_wechat_id", "receiver2_wechat_id" ],
+        "template_id": "template_id",
+        "click_url": "https://ais.usvisa-info.com/en-ca/niv",
+        "app_id": "wechat_app_id",
+        "app_secret": "wechat_app_secret"
+    }
+}
