@@ -48,14 +48,15 @@ def check_date(target_time: dict, result: dict):
     num_available = 0
     json_message = {}
     for k, v in target_time.items():
-        if v != "0-0-0":
-            num_available += 1
-        if k in result and compare_dates(v, result[k]):
-            json_message["city"] = k
-            json_message["date"] = result[k]
-            sound = f"sound/{k}_sound.wav"
-            playsound(sound)
-            is_reached = True
+        if k in result:
+            if result[k] != "0-0-0":
+                num_available += 1
+            if compare_dates(v, result[k]):
+                json_message["city"] = k
+                json_message["date"] = result[k]
+                sound = f"sound/{k}_sound.wav"
+                playsound(sound)
+                is_reached = True
     return is_reached, num_available, json_message
 
 
