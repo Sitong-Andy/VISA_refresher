@@ -58,11 +58,15 @@ class VisaRefresher:
         send_wechat = SendMessage(self.wechat_info)
         send_wechat.send_message(json_message)
 
-    def open_real_account(self):
+    def open_real_account(self, json_message):
         logger.info("OPEN REAL ACCOUNT")
+        city = json_message["city"]
         driver_real = open_real_account(self.real_account_info)
+        driver_real = self.select_time(driver_real, city)
         logger.info("Waiting User Select Time")
         for _ in range(180):
+            sound = f"sound/{city}_sound.wav"
+            playsound(sound)
             try:
                 title = driver_real.title
             except:
@@ -70,6 +74,19 @@ class VisaRefresher:
             time.sleep(1)
         logger.info("CLOSE REAL ACCOUNT")
         driver_real.quit()
+
+    def select_time(self, driver, city):
+        # Select City
+        csl_xpath = "//select[@id='appointments_consulate_appointment_facility_id']"
+        dropdown_element = driver.find_element(By.XPATH, csl_xpath)
+        dropdown_text = dropdown_element.text
+        possible_city = dropdown_text.split("\n")
+        dropdown = Select(dropdown_element)
+        if city not in possible_city:
+            logger.error("City Not Found!")
+            return None
+        dropdown.select_by_visible_text(city)
+        return driver
 
     def refresh(self):
         self.get_json()
@@ -82,6 +99,7 @@ class VisaRefresher:
                 fake_account = account_dict.popleft()
                 driver_fake = open_fake_account(fake_account)
                 while self.intervals:
+                    self.get_json()
                     self.intervals -= 1
                     try:
                         result = get_time_table(driver_fake)
@@ -109,7 +127,7 @@ class VisaRefresher:
                     if is_reached:
                         self.send_alert_message(json_message)
                         if REAL_ACC:
-                            self.open_real_account()
+                            self.open_real_account(json_message)
 
                     random_time = random.randint(120, 230)
                     logger.info("Next refresh in %d seconds" % random_time)

@@ -1,13 +1,13 @@
-import random
 import requests
 import logging
-from selenium.webdriver.common.by import By
 from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.select import Select
 from selenium.common.exceptions import TimeoutException
 from threading import Lock
 from playsound import playsound
@@ -187,7 +187,7 @@ def register(country_code, email, password, node):
         return None
 
 
-def wait_loading(driver, xpath, wait_timeout=80, option="locate"):
+def wait_loading(driver, xpath, wait_timeout=100, option="locate"):
     try:
         if option == "locate":
             element_present = EC.presence_of_element_located((By.XPATH, xpath))
@@ -206,6 +206,7 @@ def open_fake_account(account):
     password = account["password"]
     node = account["node"]
     driver = register(country_code, email, password, node)
+
     # Continue
     continue_button_xpath = "//a[contains(text(), 'Continue')]"
     wait_loading(driver, continue_button_xpath)
@@ -236,6 +237,7 @@ def open_real_account(account):
     password = account["password"]
     node = account["node"]
     driver = register(country_code, email, password, node)
+
     # Continue
     continue_button_xpath = "//a[contains(text(), 'Continue')]"
     wait_loading(driver, continue_button_xpath)
@@ -247,7 +249,10 @@ def open_real_account(account):
     # Choose action
     reschedule_xpath = "//a[contains(text(), 'Reschedule Appointment')]"
     wait_loading(driver, reschedule_xpath)
-    banner = driver.find_element(By.TAG_NAME, "h5")
+    banner = driver.find_elements(By.TAG_NAME, "h5")
+    banner = banner[3]
+    if banner.text != "Reschedule Appointment":
+        logger.error("Reschedule Appointment Banner Not Found!")
     banner.click()
     wait_loading(driver, reschedule_xpath, option="clickable")
     reschedule = driver.find_element(By.XPATH, reschedule_xpath)
